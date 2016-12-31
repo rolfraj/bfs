@@ -6,4 +6,4 @@
 
 ## To start the project
 
-1.  do 'gulp serve'
+1.  do 'npm start'
