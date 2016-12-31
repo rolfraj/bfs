@@ -2,7 +2,7 @@
   'use strict';
 
   describe('controllers', function(){
-    var vm;
+    var $scope;
     var $timeout;
     var toastr;
 
@@ -11,29 +11,29 @@
       spyOn(_webDevTec_, 'getTec').and.returnValue([{}, {}, {}, {}, {}]);
       spyOn(_toastr_, 'info').and.callThrough();
 
-      vm = _$controller_('MainController');
+      $scope = _$controller_('MainController');
       $timeout = _$timeout_;
       toastr = _toastr_;
     }));
 
     it('should have a timestamp creation date', function() {
-      expect(vm.creationDate).toEqual(jasmine.any(Number));
+      expect($scope.creationDate).toEqual(jasmine.any(Number));
     });
 
     it('should define animate class after delaying timeout ', function() {
       $timeout.flush();
-      expect(vm.classAnimation).toEqual('rubberBand');
+      expect($scope.classAnimation).toEqual('rubberBand');
     });
 
     it('should show a Toastr info and stop animation when invoke showToastr()', function() {
-      vm.showToastr();
+      $scope.showToastr();
       expect(toastr.info).toHaveBeenCalled();
-      expect(vm.classAnimation).toEqual('');
+      expect($scope.classAnimation).toEqual('');
     });
 
     it('should define more than 5 awesome things', function() {
-      expect(angular.isArray(vm.awesomeThings)).toBeTruthy();
-      expect(vm.awesomeThings.length === 5).toBeTruthy();
+      expect(angular.isArray($scope.awesomeThings)).toBeTruthy();
+      expect($scope.awesomeThings.length === 5).toBeTruthy();
     });
   });
 })();

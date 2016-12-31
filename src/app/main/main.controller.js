@@ -6,34 +6,36 @@
     .controller('MainController', MainController);
 
   /** @ngInject */
-  function MainController($timeout, webDevTec, toastr, $scope, $mdToast) {
-    var vm = this;
-    vm.errorMessage = "No Record found";
-    vm.showError = false;
-    vm.graphs = [];
-    vm.graphOf = [];
-    vm.numberToBeSearched = '';
-    vm.q = [];
-    vm.paths = [];
-    vm.awesomeThings = [];
+  function MainController($timeout, toastr, $scope, $mdToast) {
+    $scope.errorMessage = "No Record found";
+    $scope.showError = false;
+    $scope.graphs = [];
+    $scope.graphOf = [];
+    $scope.numberToBeSearched = '';
+    $scope.q = [];
+    $scope.paths = [];
+    $scope.reach = [];
+    $scope.awesomeThings = [];
     $scope.doBfs = doBfs;
-    vm.creationDate = 1483130431087;
+    $scope.creationDate = 1483130431087;
     var tree = new TreeLookup();
     
 
     function doBfs() {
       /// get all the trees
-      vm.paths = [];
+      $scope.showError = false;
+      $scope.paths = [];
+      $scope.reach = [];
       tree.getChildrenAsPromise('')
       .then(function(data){ 
-        vm.graphs = data;
-        vm.q = data;
+        $scope.graphs = data;
+        $scope.q = data;
         //got graphs
-        _.forEach(vm.q,formGraphs);
+        _.forEach($scope.q,formGraphs);
         console.log('completed');
 
       },function(error) {
-        vm.showError = true;
+        $scope.showError = true;
       });
 
     }
@@ -42,32 +44,39 @@
       if(!parent){
         return;
       }
-      vm.q.shift();
-      vm.graphOf[parent] = [];
+      if(parent === $scope.numberToBeSearched){
+        nodeFound(parent);
+      }
+      $scope.q.shift();
+      $scope.graphOf[parent] = [];
       return tree.getChildrenAsPromise(parent)
       .then(function(data){ 
         _.forEach(data, function(child) {
-          if(child === vm.numberToBeSearched){
+          if(child === $scope.numberToBeSearched){
             nodeFound(parent + '/' + child);
           }
-          vm.q.push(parent + '/' + child);
-          vm.graphOf[parent].push(parent + '/' + child);
-           _.forEach(vm.q,formGraphs);
+          $scope.q.push(parent + '/' + child);
+          $scope.graphOf[parent].push(parent + '/' + child);
+           _.forEach($scope.q,formGraphs);
+
+           if(!$scope.reach.length && parent === '7/14'){
+              $scope.showError = true;
+           }else{
+              $scope.showError = false;
+           }
+           $scope.$apply();
         });
       },function(error) {
-        vm.showError = true;
+        $scope.showError = true;
       });
     }
     function nodeFound(path) {
-      vm.paths.push(path);
-      $mdToast.show(
-      $mdToast.simple()
-        .textContent(path)
-        .position('left')
-        .hideDelay(3000)
-      );
+      $scope.paths.push(path);
+      $scope.reach.push(path);
+      document.getElementById('input_0').click();
       console.log('>>>>>>>>>>>>>>>>>>>>>paths ');
-      console.log(vm.paths);
+      console.log($scope.reach);
+      $scope.$apply();
     }
   }
 })();

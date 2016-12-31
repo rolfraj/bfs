@@ -2,28 +2,24 @@
 
   <md-content>
     <header>
-      <acme-navbar creation-date="main.creationDate"></acme-navbar>
+      <acme-navbar creation-date="creationDate"></acme-navbar>
     </header>
 
     <section class="jumbotron" >
       <h1>'BFS, 'Node Search!</h1>
       <div layout="row" layout-sm="column" layout-align="center center" layout-wrap>
         <md-input-container class="md-block" style="padding-top: 20px;">
-          <input aria-label='search' name="Search" ng-model="main.numberToBeSearched" />
+          <input aria-label='search' name="Search" ng-model="numberToBeSearched" />
+          <div ng-message="required" ng-if="showError">Record not found.</div>
         </md-input-container>
         <md-button class="md-raised md-primary" ng-click="doBfs()">Search Node</md-button>
       </div>
-      <md-card ng-repeat="path in vm.paths">
-        <md-card-content>
-          <h3 class="md-title">{{ path }}</h3>
-        </md-card-content>
-      </md-card>
     </section>
     <md-list flex>
         <md-subheader class="md-no-sticky">Search Results</md-subheader>
-        <md-list-item class="md-3-line" ng-repeat="item in vm.paths" ng-click="null">
+        <md-list-item ng-repeat="item in reach track by $index">
           <div class="md-list-item-text" layout="column">
-            <h3>item</h3>
+            <h3>{{ item }}</h3>
           </div>
         </md-list-item>
     </md-list>    
